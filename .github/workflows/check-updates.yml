@@ -1,0 +1,37 @@
+name: check for updates
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    steps:
+      - name: Install tools
+        run: pacman -Syu --noconfirm --needed git github-cli jq nvchecker pacman-contrib
+
+      - uses: actions/checkout@v4
+
+      # makepkg refuses to run as root
+      - name: Create build user
+        run: |
+          useradd -m builder
+          chown -R builder "$GITHUB_WORKSPACE"
+
+      - name: Check for updates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          runuser -u builder -- env HOME=/home/builder GH_TOKEN="$GH_TOKEN" bash -c '
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            printf "[keys]\ngithub = \"%s\"\n" "$GH_TOKEN" >keyfile.toml
+            scripts/check-updates
+          '

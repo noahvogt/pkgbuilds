@@ -1,0 +1,101 @@
+#!/bin/bash
+# Open a PR per package for
+# - new upstream versions (sources in nvchecker.toml)
+# - new commits in the AUR package a PKGBUILD is forked from (<pkg>/.aur-upstream)
+# Meant to run in CI as a non-root user with GH_TOKEN set.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+base=$(git rev-parse --abbrev-ref HEAD)
+
+branch_exists() {
+    git ls-remote --exit-code --heads origin "$1" >/dev/null
+}
+
+# commit staged changes to a new branch and open a PR for it
+open_pr() {
+    local branch=$1 title=$2 body=$3
+    git commit -q -m "$title"
+    git push -q origin "HEAD:refs/heads/$branch"
+    gh pr create --base "$base" --head "$branch" --title "$title" --body "${body:0:60000}"
+    git checkout -q "$base"
+}
+
+check_upstream_versions() {
+    local entries entry pkg ver cur branch status
+    nvchecker -c nvchecker.toml
+    mapfile -t entries < <(jq -r '(.data // .) | to_entries[] | "\(.key) \(.value.version // .value)"' new_ver.json)
+    for entry in "${entries[@]}"; do
+        read -r pkg ver <<<"$entry"
+        cur=$(sed -n 's/^\tpkgver = //p' "$pkg/.SRCINFO")
+        [ "$(vercmp "$ver" "$cur")" -gt 0 ] || continue
+
+        branch="update/$pkg-$ver"
+        if branch_exists "$branch"; then
+            echo "$pkg: $branch already exists, skipping"
+            continue
+        fi
+
+        echo "$pkg: $cur -> $ver"
+        git checkout -q -b "$branch" "$base"
+        scripts/bump "$pkg" "$ver"
+
+        # prepare() applies the patches, so this catches ones needing a rebase
+        if (cd "$pkg" && makepkg -o -f --nodeps --noconfirm) >prepare.log 2>&1; then
+            status="\`makepkg -o\` succeeded, all patches still apply."
+        else
+            status="**\`makepkg -o\` failed**, patches probably need rebasing:
+\`\`\`
+$(tail -n 40 prepare.log)
+\`\`\`"
+        fi
+        rm -rf "$pkg/src" prepare.log
+
+        git add "$pkg"
+        open_pr "$branch" "$pkg: update to $ver" "Upstream released $ver.
+
+$status"
+    done
+}
+
+check_aur_forks() {
+    local file pkg name old new tmp diff
+    for file in */.aur-upstream; do
+        [ -e "$file" ] || continue
+        pkg=${file%%/*}
+        read -r name old <"$file"
+        if ! new=$(git ls-remote "https://aur.archlinux.org/$name.git" refs/heads/master | cut -f1); then
+            echo "$pkg: could not reach AUR $name, skipping"
+            continue
+        fi
+        [ -n "$new" ] && [ "$new" != "$old" ] || continue
+
+        branch="aur-upstream/$pkg-${new:0:8}"
+        if branch_exists "$branch"; then
+            echo "$pkg: $branch already exists, skipping"
+            continue
+        fi
+
+        echo "$pkg: AUR $name changed ${old:0:8} -> ${new:0:8}"
+        tmp=$(mktemp -d)
+        if ! git clone -q "https://aur.archlinux.org/$name.git" "$tmp"; then
+            echo "$pkg: could not clone AUR $name, skipping"
+            rm -rf "$tmp"
+            continue
+        fi
+        diff=$(git -C "$tmp" diff "$old" "$new" -- . ':!.SRCINFO')
+        rm -rf "$tmp"
+
+        git checkout -q -b "$branch" "$base"
+        echo "$name $new" >"$file"
+        git add "$file"
+        open_pr "$branch" "$pkg: review changes of AUR $name" "The AUR package \`$name\` this PKGBUILD is forked from changed. Port the relevant parts onto this branch before merging, merging marks them as reviewed.
+
+\`\`\`diff
+$diff
+\`\`\`"
+    done
+}
+
+check_upstream_versions
+check_aur_forks

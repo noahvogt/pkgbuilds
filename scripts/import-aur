@@ -1,0 +1,5 @@
+#!/bin/sh
+# import an AUR package including its history: scripts/import-aur <pkg>
+set -eu
+
+git subtree add --prefix="$1" "https://aur.archlinux.org/$1.git" master

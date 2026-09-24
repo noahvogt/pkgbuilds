@@ -1,0 +1,10 @@
+# upstream version sources, one entry per package (see nvchecker(1))
+[__config__]
+keyfile = "keyfile.toml"
+newver = "new_ver.json"
+
+[fluffychat-color-emoji]
+source = "github"
+github = "krille-chan/fluffychat"
+use_latest_release = true
+prefix = "v"

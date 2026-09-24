@@ -1,0 +1,5 @@
+#!/bin/sh
+# push a package directory to its AUR repo: scripts/publish-aur <pkg>
+set -eu
+
+git subtree push --prefix="$1" "ssh://aur@aur.archlinux.org/$1.git" master

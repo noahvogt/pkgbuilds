@@ -1,0 +1,8 @@
+#!/bin/sh
+# bump a package to a new upstream version: scripts/bump <pkg> <version>
+set -eu
+
+cd "$1"
+sed -i -e "s/^pkgver=.*/pkgver=$2/" -e "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
+updpkgsums
+makepkg --printsrcinfo >.SRCINFO
