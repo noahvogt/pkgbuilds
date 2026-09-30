@@ -16,6 +16,7 @@ SkipReview
 | package | description |
 | --- | --- |
 | fluffychat-color-emoji | fluffychat with Noto Color Emoji in flutter's font fallback list (not on the AUR) |
+| openconnect-ms-auth | fetches an openconnect webvpn cookie from an MFA enabled Microsoft account ([fork](https://github.com/noahvogt/openconnect-ms-auth)) |
 
 ## Updates
 

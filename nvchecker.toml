@@ -8,3 +8,10 @@ source = "github"
 github = "krille-chan/fluffychat"
 use_latest_release = true
 prefix = "v"
+
+[openconnect-ms-auth]
+source = "github"
+github = "noahvogt/openconnect-ms-auth"
+# tags, not releases: `just release` tags without creating a GitHub release
+use_max_tag = true
+prefix = "v"
