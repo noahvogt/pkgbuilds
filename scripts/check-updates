@@ -22,10 +22,13 @@ open_pr() {
 }
 
 check_upstream_versions() {
-    local entries entry pkg ver cur branch status
+    local entries entry pkg ver cur branch status raw
     nvchecker -c nvchecker.toml
-    mapfile -t entries < <(jq -r '(.data // .) | to_entries[] | "\(.key) \(.value.version // .value)"' new_ver.json)
+    # command substitution, not <(...): set -e sees a failing jq this way
+    raw=$(jq -r '(.data // .) | to_entries[] | "\(.key) \(.value.version // .value)"' new_ver.json)
+    mapfile -t entries <<<"$raw"
     for entry in "${entries[@]}"; do
+        [ -n "$entry" ] || continue
         read -r pkg ver <<<"$entry"
         cur=$(sed -n 's/^\tpkgver = //p' "$pkg/.SRCINFO")
         [ "$(vercmp "$ver" "$cur")" -gt 0 ] || continue
