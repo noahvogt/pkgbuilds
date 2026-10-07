@@ -1,6 +1,9 @@
 # upstream version sources, one entry per package (see nvchecker(1))
 [__config__]
 keyfile = "keyfile.toml"
+# nvchecker only writes newver when oldver is declared too; the file itself is
+# never created, versions are compared against .SRCINFO in scripts/check-updates
+oldver = "old_ver.json"
 newver = "new_ver.json"
 
 [fluffychat-color-emoji]
