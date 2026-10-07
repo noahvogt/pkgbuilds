@@ -62,7 +62,7 @@ $status"
 }
 
 check_aur_forks() {
-    local file pkg name old new tmp diff
+    local file pkg name old new tmp diff branch
     for file in */.aur-upstream; do
         [ -e "$file" ] || continue
         pkg=${file%%/*}
