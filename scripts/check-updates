@@ -7,6 +7,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 base=$(git rev-parse --abbrev-ref HEAD)
+# packages whose bump failed, makes the run fail once everything is checked
+failed=()
 
 branch_exists() {
     git ls-remote --exit-code --heads origin "$1" >/dev/null
@@ -41,7 +43,18 @@ check_upstream_versions() {
 
         echo "$pkg: $cur -> $ver"
         git checkout -q -b "$branch" "$base"
-        scripts/bump "$pkg" "$ver"
+        # fails e.g. when a release lacks the asset the PKGBUILD downloads,
+        # skip the package so the others still get checked
+        if ! scripts/bump "$pkg" "$ver" >bump.log 2>&1; then
+            echo "::error::$pkg: bumping to $ver failed"
+            tail -n 40 bump.log
+            rm -f bump.log
+            git checkout -q -f "$base"
+            git branch -q -D "$branch"
+            failed+=("$pkg")
+            continue
+        fi
+        rm -f bump.log
 
         # prepare() applies the patches, so this catches ones needing a rebase
         if (cd "$pkg" && makepkg -o -f --nodeps --noconfirm) >prepare.log 2>&1; then
@@ -102,3 +115,8 @@ $diff
 
 check_upstream_versions
 check_aur_forks
+
+if [ ${#failed[@]} -gt 0 ]; then
+    echo "failed to bump: ${failed[*]}" >&2
+    exit 1
+fi
