@@ -18,3 +18,11 @@ github = "noahvogt/openconnect-ms-auth"
 # tags, not releases: `just release` tags without creating a GitHub release
 use_max_tag = true
 prefix = "v"
+
+[chromium-extension-return-youtube-dislike]
+source = "github"
+github = "Anarios/return-youtube-dislike"
+# max matching release, not latest: upstream also publishes userscript-v* releases
+use_max_release = true
+include_regex = 'v\d+(\.\d+)+'
+prefix = "v"
