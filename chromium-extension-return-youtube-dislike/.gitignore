@@ -1,0 +1,7 @@
+*.pkg.*
+*.crx
+src
+pkg
+*.tar.*
+*.log
+nohup.out
