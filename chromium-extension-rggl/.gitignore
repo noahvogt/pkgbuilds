@@ -1,0 +1,6 @@
+*.pkg.*
+src
+rggl*
+pkg
+*.log
+nohup.out
