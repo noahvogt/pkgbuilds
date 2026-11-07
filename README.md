@@ -16,8 +16,14 @@ SkipReview
 | package | description |
 | --- | --- |
 | chromium-extension-return-youtube-dislike | [Return YouTube Dislike](https://github.com/Anarios/return-youtube-dislike), preinstalled for chromium |
+| chromium-extension-rggl | [Remove German Gender Language](https://github.com/motsiw/rggl), preinstalled for chromium |
 | fluffychat-color-emoji | fluffychat with Noto Color Emoji in flutter's font fallback list (not on the AUR) |
+| issuu-dl | downloader for issuu.com with pdf and cbz output ([own project](https://github.com/noahvogt/issuu-dl)) |
+| libva-v4l2_request-asahi | VA-API driver for the Apple Silicon video decoder ([asahi-va-driver](https://github.com/sofus13/libva-v4l2_request)) |
 | openconnect-ms-auth | fetches an openconnect webvpn cookie from an MFA enabled Microsoft account ([fork](https://github.com/noahvogt/openconnect-ms-auth)) |
+| tibasicc | TI-BASIC (de-)compiler ([own project](https://github.com/noahvogt/tibasicc)) |
+| tibasicc-git | tibasicc, git version |
+| tilp-xdg | TI calculator link program, patched to follow the XDG Base Directory spec (fork of AUR tilp) |
 
 ## Updates
 

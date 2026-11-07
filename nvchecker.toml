@@ -26,3 +26,20 @@ github = "Anarios/return-youtube-dislike"
 use_max_release = true
 include_regex = 'v\d+(\.\d+)+'
 prefix = "v"
+
+[issuu-dl]
+source = "github"
+github = "noahvogt/issuu-dl"
+use_max_tag = true
+prefix = "v"
+
+[libva-v4l2_request-asahi]
+source = "github"
+github = "sofus13/libva-v4l2_request"
+use_max_tag = true
+
+[tibasicc]
+source = "github"
+github = "noahvogt/tibasicc"
+use_max_tag = true
+prefix = "v"
