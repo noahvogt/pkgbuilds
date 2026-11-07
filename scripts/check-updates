@@ -56,8 +56,9 @@ check_upstream_versions() {
         fi
         rm -f bump.log
 
-        # prepare() applies the patches, so this catches ones needing a rebase
-        if (cd "$pkg" && makepkg -o -f --nodeps --noconfirm) >prepare.log 2>&1; then
+        # prepare() applies the patches, so this catches ones needing a rebase.
+        # --ignorearch: CI runs on x86_64, some packages are aarch64 only
+        if (cd "$pkg" && makepkg -o -f -A --nodeps --noconfirm) >prepare.log 2>&1; then
             status="\`makepkg -o\` succeeded, all patches still apply."
         else
             status="**\`makepkg -o\` failed**, patches probably need rebasing:
