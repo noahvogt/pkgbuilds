@@ -10,6 +10,22 @@ base=$(git rev-parse --abbrev-ref HEAD)
 # packages whose bump failed, makes the run fail once everything is checked
 failed=()
 
+install_makedepends() {
+    local pkg=$1 dep deps=()
+    # CI grants passwordless sudo for pacman, elsewhere leave the system alone
+    sudo -n true 2>/dev/null || return 0
+    while read -r dep; do
+        dep=${dep%%[<>=]*}
+        # AUR-only makedepends can't be installed, makepkg will report them
+        if pacman -Si "$dep" >/dev/null 2>&1; then
+            deps+=("$dep")
+        else
+            echo "makedepend $dep not in the repos, skipping"
+        fi
+    done < <(sed -n 's/^\tmakedepends\(_x86_64\)\? = //p' "$pkg/.SRCINFO")
+    [ ${#deps[@]} -eq 0 ] || sudo -n pacman -S --needed --noconfirm "${deps[@]}"
+}
+
 branch_exists() {
     git ls-remote --exit-code --heads origin "$1" >/dev/null
 }
@@ -57,11 +73,14 @@ check_upstream_versions() {
         rm -f bump.log
 
         # prepare() applies the patches, so this catches ones needing a rebase.
+        # --nodeps: runtime depends aren't needed for prepare(), makedepends
+        # are installed explicitly since prepare() may use them.
         # --ignorearch: CI runs on x86_64, some packages are aarch64 only
-        if (cd "$pkg" && makepkg -o -f -A --nodeps --noconfirm) >prepare.log 2>&1; then
+        if { install_makedepends "$pkg" &&
+            (cd "$pkg" && makepkg -o -f -A --nodeps --noconfirm); } >prepare.log 2>&1; then
             status="\`makepkg -o\` succeeded, all patches still apply."
         else
-            status="**\`makepkg -o\` failed**, patches probably need rebasing:
+            status="**\`makepkg -o\` failed**, check whether patches need rebasing or makedepends are missing:
 \`\`\`
 $(tail -n 40 prepare.log)
 \`\`\`"
