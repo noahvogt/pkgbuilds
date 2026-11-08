@@ -3,7 +3,7 @@
 
 _extension=return-youtube-dislike
 pkgname="chromium-extension-$_extension"
-pkgver=4.1.6
+pkgver=4.1.7
 pkgrel=1
 pkgdesc="Return YouTube Dislike - chromium extension"
 arch=('any')
@@ -14,7 +14,7 @@ makedepends=('openssl' 'jq' 'unzip')
 source=("$url/releases/download/v$pkgver/$_extension-chrome-$pkgver.zip"
         "$_extension.pem")
 noextract=("$_extension-chrome-$pkgver.zip")
-sha256sums=('81df9894f8af385638e17d01493d2ec64cb612c3e34cde385c103648de95ed07'
+sha256sums=('c63456be2c4c543b8ba85189aca95aeeedb56ef32326ec2eaf483374022d86db'
             'b25ae9e44d68756e8124b60be28dccc308570f5576440989aa8fa0d639d2c8f2')
 
 # chromium derives the extension id from the public key of the signing key
