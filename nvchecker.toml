@@ -49,3 +49,9 @@ source = "github"
 github = "kubernetes-sigs/headlamp"
 use_latest_release = true
 prefix = "v"
+
+[vpcs]
+source = "github"
+github = "GNS3/vpcs"
+use_latest_release = true
+prefix = "v"

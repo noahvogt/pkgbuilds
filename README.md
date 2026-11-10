@@ -25,6 +25,7 @@ SkipReview
 | tibasicc | TI-BASIC (de-)compiler ([own project](https://github.com/noahvogt/tibasicc)) |
 | tibasicc-git | tibasicc, git version |
 | tilp-xdg | TI calculator link program, patched to follow the XDG Base Directory spec (fork of AUR tilp) |
+| vpcs | [VPCS](https://github.com/GNS3/vpcs) virtual PC simulator, with aarch64 support (fork of AUR vpcs) |
 
 ## Updates
 
