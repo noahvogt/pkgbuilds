@@ -44,12 +44,6 @@ github = "noahvogt/tibasicc"
 use_max_tag = true
 prefix = "v"
 
-[headlamp-bin]
-source = "github"
-github = "kubernetes-sigs/headlamp"
-use_latest_release = true
-prefix = "v"
-
 [vpcs]
 source = "github"
 github = "GNS3/vpcs"
