@@ -12,8 +12,8 @@ export FVM_CACHE_PATH
 
 _pkgname="fluffychat"
 pkgname="$_pkgname-color-emoji"
-pkgver=2.11.5
-pkgrel=2
+pkgver=2.11.6
+pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix] (with color emoji fallback)"
 url="https://github.com/krille-chan/fluffychat"
 license=('AGPL-3.0-only')
@@ -56,9 +56,9 @@ source=(
     '0000-fix-wayland-gtk-csd.patch'
     '0001-color-emoji-fallback.patch'
 )
-sha256sums=('c823b44008dd1d9f7b0360a7122d66ec5a96544f7ad28166f39bdc5eaeaf69d4'
-    '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230'
-    'b35ccd4fdf32109ecbfd4979828a4b21ee66d38b67c1175c7ebe7ca90f2ecd1f')
+sha256sums=('b2403f18c937ce47d2617aab834c19ac7721596d80517734079c5866abd9d9d4'
+            '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230'
+            'b35ccd4fdf32109ecbfd4979828a4b21ee66d38b67c1175c7ebe7ca90f2ecd1f')
 
 prepare() (
     for src in "${source[@]}"; do
