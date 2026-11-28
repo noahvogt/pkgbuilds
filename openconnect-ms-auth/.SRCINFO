@@ -1,6 +1,6 @@
 pkgbase = openconnect-ms-auth
 	pkgdesc = Fetch an openconnect webvpn cookie from an MFA enabled Microsoft account
-	pkgver = 1.0.0
+	pkgver = 1.0.2
 	pkgrel = 1
 	url = https://github.com/noahvogt/openconnect-ms-auth
 	arch = any
@@ -16,7 +16,7 @@ pkgbase = openconnect-ms-auth
 	depends = firefox
 	optdepends = openconnect: to connect with the fetched cookie
 	optdepends = networkmanager-openconnect: to hand the cookie to NetworkManager
-	source = openconnect-ms-auth-1.0.0.tar.gz::https://github.com/noahvogt/openconnect-ms-auth/archive/refs/tags/v1.0.0.tar.gz
-	sha256sums = eeec4f85982782711b329076ae8e14dbfde75ceee8f8950114098cb829c7da4b
+	source = openconnect-ms-auth-1.0.2.tar.gz::https://github.com/noahvogt/openconnect-ms-auth/archive/refs/tags/v1.0.2.tar.gz
+	sha256sums = 15ff55542b4a7e5846b9d713b1db1a91c25d05e99bae11dd858d9624e25717d3
 
 pkgname = openconnect-ms-auth

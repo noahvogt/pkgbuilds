@@ -2,7 +2,7 @@
 # Contributor: Sean Blackburn <birdicode@gmail.com>
 
 pkgname=openconnect-ms-auth
-pkgver=1.0.0
+pkgver=1.0.2
 pkgrel=1
 pkgdesc="Fetch an openconnect webvpn cookie from an MFA enabled Microsoft account"
 arch=('any')
@@ -15,7 +15,7 @@ optdepends=('openconnect: to connect with the fetched cookie'
     'networkmanager-openconnect: to hand the cookie to NetworkManager')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 # Filled in by scripts/bump, which runs updpkgsums against the tag.
-sha256sums=('eeec4f85982782711b329076ae8e14dbfde75ceee8f8950114098cb829c7da4b')
+sha256sums=('15ff55542b4a7e5846b9d713b1db1a91c25d05e99bae11dd858d9624e25717d3')
 
 build() {
     cd "$pkgname-$pkgver"
